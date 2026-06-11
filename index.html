@@ -262,7 +262,28 @@ html+="<div class='lista'>"+lista[i]+" <button onclick='excluirAtividade(\""+mat
 document.getElementById("conteudo").innerHTML=html;
 }
 
-function aviso(){
+function aviso()function excluir(materia, indice){
+
+dados = JSON.parse(localStorage.getItem("dados"));
+
+dados[materia].splice(indice, 1);
+
+localStorage.setItem("dados", JSON.stringify(dados));
+
+abrir(materia);
+
+}html += "<div class='lista'>" + lista[i] +
+" <button onclick=\"excluir('" + materia + "'," + i + ")\">🗑 Excluir</button></div>";
+
+dados = JSON.parse(localStorage.getItem("dados"));
+
+dados[materia].splice(indice, 1);
+
+localStorage.setItem("dados", JSON.stringify(dados));
+
+abrir(materia);
+
+}
 
 let texto=document.getElementById("novoAviso").value;
 
