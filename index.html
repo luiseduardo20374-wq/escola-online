@@ -8,9 +8,8 @@
 <style>
 body{
 font-family:Arial,sans-serif;
-background:#f5f5f5;
 margin:0;
-padding:0;
+background:#f5f5f5;
 }
 
 header{
@@ -18,100 +17,185 @@ background:#2563eb;
 color:white;
 padding:20px;
 text-align:center;
+font-size:30px;
+font-weight:bold;
 }
 
 .card{
 background:white;
 margin:15px;
 padding:15px;
-border-radius:12px;
-box-shadow:0 2px 5px rgba(0,0,0,.1);
+border-radius:15px;
+box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+
+input,button,select{
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:10px;
+border:1px solid #ccc;
+box-sizing:border-box;
 }
 
 button{
 background:#2563eb;
 color:white;
 border:none;
-padding:10px;
-border-radius:8px;
-width:100%;
-}
-
-input{
-width:100%;
-padding:10px;
-margin-top:10px;
-border:1px solid #ccc;
-border-radius:8px;
 }
 
 .materia{
+background:#e5e7eb;
+padding:12px;
+margin-top:8px;
+border-radius:10px;
+cursor:pointer;
+}
+
+#adminPanel{
+display:none;
+}
+
+.lista{
 margin-top:10px;
 padding:10px;
-background:#eef2ff;
-border-radius:8px;
+background:#f0f0f0;
+border-radius:10px;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-<h1>📚 Escola Online</h1>
-</header>
+<header>📚 Escola Online</header>
 
 <div class="card">
-<h2 id="saudacao">Olá 😊</h2>
-
-<input id="nome" placeholder="Digite seu nome">
-
-<button onclick="salvarNome()">Entrar</button>
+<h2>Entrar</h2>
+<input id="senha" placeholder="Digite a senha">
+<button onclick="login()">Entrar</button>
 </div>
 
 <div class="card">
-<h3>🔔 Avisos</h3>
-<p>Nenhum aviso disponível.</p>
+<h2>🔔 Avisos Importantes</h2>
+<div id="avisos">Nenhum aviso.</div>
 </div>
 
 <div class="card">
-<h3>📝 Atividades Recentes</h3>
-<p>Você não tem nenhuma atividade no momento.</p>
+<h2>📖 Matérias</h2>
+
+<div class="materia" onclick="abrir('Matemática')">Matemática</div>
+<div class="materia" onclick="abrir('Português')">Português</div>
+<div class="materia" onclick="abrir('Ciências')">Ciências</div>
+<div class="materia" onclick="abrir('História')">História</div>
+<div class="materia" onclick="abrir('Geografia')">Geografia</div>
+<div class="materia" onclick="abrir('Inglês')">Inglês</div>
+<div class="materia" onclick="abrir('Arte')">Arte</div>
+<div class="materia" onclick="abrir('Educação Física')">Educação Física</div>
+<div class="materia" onclick="abrir('Cidadania e Humanidade')">Cidadania e Humanidade</div>
+<div class="materia" onclick="abrir('Redação')">Redação</div>
+<div class="materia" onclick="abrir('Geometria')">Geometria</div>
+
 </div>
 
 <div class="card">
-<h3>📖 Matérias</h3>
+<h2 id="tituloMateria">Selecione uma matéria</h2>
+<div id="conteudo">As atividades aparecerão aqui.</div>
+</div>
 
-<div class="materia">Matemática</div>
-<div class="materia">Português</div>
-<div class="materia">Ciências</div>
-<div class="materia">História</div>
-<div class="materia">Geografia</div>
-<div class="materia">Inglês</div>
-<div class="materia">Artes</div>
-<div class="materia">Educação Física</div>
+<div id="adminPanel" class="card">
+<h2>👑 Painel do Administrador</h2>
+
+<select id="materiaAdmin">
+<option>Matemática</option>
+<option>Português</option>
+<option>Ciências</option>
+<option>História</option>
+<option>Geografia</option>
+<option>Inglês</option>
+<option>Arte</option>
+<option>Educação Física</option>
+<option>Cidadania e Humanidade</option>
+<option>Redação</option>
+<option>Geometria</option>
+</select>
+
+<input id="atividade" placeholder="Nova atividade">
+<button onclick="adicionar()">Adicionar atividade</button>
+
+<input id="novoAviso" placeholder="Novo aviso">
+<button onclick="aviso()">Publicar aviso</button>
 
 </div>
 
 <script>
-function salvarNome(){
-let nome=document.getElementById("nome").value;
 
-if(nome!=""){
-localStorage.setItem("nomeAluno",nome);
-document.getElementById("saudacao").innerHTML=
-"Olá 😊, tudo bem, "+nome+"!";
+let dados={};
+
+function login(){
+let senha=document.getElementById("senha").value;
+
+if(senha==="admin123"){
+document.getElementById("adminPanel").style.display="block";
+alert("Administrador conectado!");
+}else{
+alert("Entrou como aluno.");
 }
 }
 
-window.onload=function(){
-let nome=localStorage.getItem("nomeAluno");
+function adicionar(){
 
-if(nome){
-document.getElementById("saudacao").innerHTML=
-"Olá 😊, tudo bem, "+nome+"!";
+let materia=document.getElementById("materiaAdmin").value;
+let atividade=document.getElementById("atividade").value;
+
+if(!dados[materia]){
+dados[materia]=[];
 }
+
+dados[materia].push(atividade);
+
+localStorage.setItem("dados",JSON.stringify(dados));
+
+alert("Atividade adicionada!");
 }
+
+function abrir(materia){
+
+document.getElementById("tituloMateria").innerHTML=materia;
+
+dados=JSON.parse(localStorage.getItem("dados")) || {};
+
+let lista=dados[materia] || [];
+
+let html="";
+
+if(lista.length===0){
+html="Nenhuma atividade.";
+}else{
+
+for(let i=0;i<lista.length;i++){
+html+="<div class='lista'>"+lista[i]+"</div>";
+}
+
+}
+
+document.getElementById("conteudo").innerHTML=html;
+}
+
+function aviso(){
+
+let texto=document.getElementById("novoAviso").value;
+
+document.getElementById("avisos").innerHTML=texto;
+
+localStorage.setItem("aviso",texto);
+}
+
+document.getElementById("avisos").innerHTML=
+localStorage.getItem("aviso") || "Nenhum aviso.";
+
+dados=JSON.parse(localStorage.getItem("dados")) || {};
+
 </script>
 
 </body>
-</html>
+  </html>
