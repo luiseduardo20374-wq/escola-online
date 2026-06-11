@@ -254,7 +254,7 @@ html="Nenhuma atividade.";
 }else{
 
 for(let i=0;i<lista.length;i++){
-html+="<div class='lista'>"+lista[i]+"</div>";
+html+="<div class='lista'>"+lista[i]+" <button onclick='excluirAtividade(\""+materia+"\","+i+")'>🗑️ Excluir</button></div>";
 }
 
 }
